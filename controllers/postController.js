@@ -32,9 +32,7 @@ exports.getPosts = catchAsync(async (req, res) => {
 });
 
 exports.singlePost = catchAsync(async (req, res) => {
-  const post = await Post.findById(req.params.id, req.body).populate(
-    "comments"
-  );
+  const post = await Post.findById(req.params.id);
 
   if (!post) {
     res.status(404).json({
