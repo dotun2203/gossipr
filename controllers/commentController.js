@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const Comment = require("../models/commentModel");
 const catchAsync = require("../utils/catchAsync");
 
 exports.postComment = catchAsync(async (req, res) => {
