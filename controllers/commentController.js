@@ -3,7 +3,7 @@ const Comment = require("../models/commentModel");
 const catchAsync = require("../utils/catchAsync");
 
 exports.postComment = catchAsync(async (req, res) => {
-  const newComment = await Comment.create({
+  const newComment = await Comment({
     content: req.body.content,
     postId: req.params.id,
   });

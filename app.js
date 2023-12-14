@@ -45,8 +45,8 @@ app.get("/", (req, res) => {
   res.send("welcome to gossip-r");
 });
 
-app.use("/api/v1/posts", postRoutes);
-app.use("/api/v1/comments", commentRoutes);
+app.use("/api/v1/posts/", postRoutes);
+app.use("/api/v1/comments/", commentRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
