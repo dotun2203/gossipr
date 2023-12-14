@@ -9,6 +9,6 @@ router.route("/createPosts").post(postController.createPosts);
 router.route("/getPosts").get(postController.getPosts);
 
 router.route("/getPosts/:id").get(postController.singlePost);
-router.route("/:id").post(commentController.postComment);
+router.route("/:id/comments").post(commentController.postComment);
 
 module.exports = router;
