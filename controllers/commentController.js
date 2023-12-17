@@ -1,6 +1,6 @@
 const Post = require("../models/postModel");
 const Comment = require("../models/commentModel");
-const catchAsync = require("../utils/catchAsync");
+const { catchAsync, handleResponse } = require("../utils/helper");
 
 exports.postComment = catchAsync(async (req, res) => {
   const newComment = await Comment({
@@ -12,8 +12,10 @@ exports.postComment = catchAsync(async (req, res) => {
     $push: { comments: newComment._id },
   });
 
-  res.status(200).json({
-    status: "comment succesfully posted",
+  handleResponse({
+    res,
+    status: 200,
+    message: "comment sucecesfully posted",
     data: newComment,
   });
 });

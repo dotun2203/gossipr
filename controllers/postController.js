@@ -1,11 +1,13 @@
 const Post = require("../models/postModel");
-const catchAsync = require("../utils/catchAsync");
+const { catchAsync, handleResponse } = require("../utils/helper");
+// const catchAsync = require("../utils/catchAsync");
 
 exports.createPosts = catchAsync(async (req, res) => {
   const newPost = await Post.create(req.body);
-
-  res.status(200).json({
-    status: "success",
+  handleResponse({
+    res,
+    status: 200,
+    message: "post created successfully",
     data: newPost,
   });
 });
@@ -21,29 +23,21 @@ exports.getPosts = catchAsync(async (req, res) => {
       })
     );
   }
-
-  res.status(200).json({
-    status: "success",
-    results: posts.length,
-    data: {
-      posts,
-    },
+  handleResponse({
+    res,
+    status: 200,
+    message: "comment posted successfully",
+    data: posts,
   });
 });
 
 exports.singlePost = catchAsync(async (req, res) => {
   const post = await Post.findById(req.params.id);
-
   if (!post) {
     res.status(404).json({
       message: "post not found",
     });
   }
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      post,
-    },
-  });
+  handleResponse({ res, status: 200, message: "success", data: post });
 });
