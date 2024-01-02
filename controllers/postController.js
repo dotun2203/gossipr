@@ -4,11 +4,13 @@ const { catchAsync, handleResponse } = require("../utils/helper");
 
 exports.createPosts = catchAsync(async (req, res) => {
   const newPost = await Post.create(req.body);
+  const createdAt = newPost.formatDate();
   handleResponse({
     res,
     status: 200,
     message: "post created successfully",
     data: newPost,
+    createdAt,
   });
 });
 

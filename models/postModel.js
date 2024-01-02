@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment");
 
 const postSchema = new mongoose.Schema({
   content: {
@@ -19,5 +20,8 @@ const postSchema = new mongoose.Schema({
   ],
 });
 
+postSchema.methods.formatDate = function () {
+  return moment(this.createdAt).format("YYYY-MM-DD HH:mm:ss");
+};
 const Post = mongoose.model("Post", postSchema);
 module.exports = Post;
