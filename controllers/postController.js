@@ -14,17 +14,17 @@ exports.createPosts = catchAsync(async (req, res) => {
   });
 });
 
+// populate comments if necessary
+// if (req.query.populateComments) {
+//   await Promise.all(
+//     posts.map(async (post) => {
+//       post.comments = await Comment.find({ _id: { $in: post.comments } });
+//     })
+//   );
+// }
 exports.getPosts = catchAsync(async (req, res) => {
-  const posts = await Post.find({}).sort({ createdAt: -1 });
+  const posts = await Post.find({});
 
-  // populate comments if necessary
-  if (req.query.populateComments) {
-    await Promise.all(
-      posts.map(async (post) => {
-        post.comments = await Comment.find({ _id: { $in: post.comments } });
-      })
-    );
-  }
   handleResponse({
     res,
     status: 200,
@@ -34,12 +34,23 @@ exports.getPosts = catchAsync(async (req, res) => {
 });
 
 exports.singlePost = catchAsync(async (req, res) => {
-  const post = await Post.findById(req.params.id).populate('comments')
-  if (!post) {
-    res.status(404).json({
-      message: "post not found",
+  const { id } = req.params;
+
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      return handleResponse({ res, status: 404, message: "page not found" });
+    }
+
+    const comments = post.comments;
+    // handleResponse({ res, status: 200, message: "success", data: post });
+
+    return res.json({ post, comments });
+  } catch (error) {
+    return handleResponse({
+      res,
+      status: 500,
+      message: "internal server error",
     });
   }
-
-  handleResponse({ res, status: 200, message: "success", data: post });
 });
