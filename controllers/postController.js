@@ -1,18 +1,45 @@
+// const { path } = require("../app");
 const Post = require("../models/postModel");
-const { catchAsync, handleResponse } = require("../utils/helper");
-// const catchAsync = require("../utils/catchAsync");
+const {
+  catchAsync,
+  handleResponse,
+  getpostsWithComments,
+} = require("../utils/helper");
 
-exports.createPosts = catchAsync(async (req, res) => {
-  const newPost = await Post.create(req.body);
-  const createdAt = newPost.formatDate();
-  handleResponse({
-    res,
-    status: 200,
-    message: "post created successfully",
-    data: newPost,
-    createdAt,
-  });
+exports.createPost = catchAsync(async (req, res) => {
+  const newPost = new Post(req.body);
+  const savedPost = await newPost.save();
+  res.status(201).json(savedPost);
 });
+
+exports.getPosts = catchAsync(async (req, res) => {
+  const posts = await Post.find();
+  res.json(posts);
+});
+
+exports.singlePost = catchAsync(async (req, res) => {
+  const post = await Post.findById(req.params.postId).populate({
+    path: "comments",
+    select: "content",
+  });
+  if (!post) {
+    res.status(404).json({ message: "post not found" });
+  } else {
+    res.json(post);
+  }
+});
+
+// exports.createPosts = catchAsync(async (req, res) => {
+//   const newPost = await Post.create(req.body);
+//   const createdAt = newPost.formatDate();
+//   handleResponse({
+//     res,
+//     status: 200,
+//     message: "post created successfully",
+//     data: newPost,
+//     createdAt,
+//   });
+// });
 
 // populate comments if necessary
 // if (req.query.populateComments) {
@@ -22,35 +49,28 @@ exports.createPosts = catchAsync(async (req, res) => {
 //     })
 //   );
 // }
-exports.getPosts = catchAsync(async (req, res) => {
-  const posts = await Post.find({});
 
-  handleResponse({
-    res,
-    status: 200,
-    message: "comment posted successfully",
-    data: posts,
-  });
-});
+// exports.getPosts = catchAsync(async (req, res) => {
+//   const posts = await getpostsWithComments();
 
-exports.singlePost = catchAsync(async (req, res) => {
-  const { id } = req.params;
+//   handleResponse({
+//     res,
+//     status: 200,
+//     message: "comment posted successfully",
+//     data: posts,
+//   });
+// });
 
-  try {
-    const post = await Post.findById(id);
-    if (!post) {
-      return handleResponse({ res, status: 404, message: "page not found" });
-    }
+// exports.singlePost = catchAsync(async (req, res) => {
+//   const { id } = req.params;
 
-    const comments = post.comments;
-    // handleResponse({ res, status: 200, message: "success", data: post });
+//   const post = await Post.findById(id).populate("comments");
+//   if (!post) {
+//     return handleResponse({ res, status: 404, message: "page not found" });
+//   }
 
-    return res.json({ post, comments });
-  } catch (error) {
-    return handleResponse({
-      res,
-      status: 500,
-      message: "internal server error",
-    });
-  }
-});
+//   const comments = post.comments;
+//   // handleResponse({ res, status: 200, message: "success", data: post });
+
+//   return res.json({ post, comments });
+// });

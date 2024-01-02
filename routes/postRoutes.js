@@ -4,11 +4,10 @@ const commentController = require("../controllers/commentController");
 
 const router = express.Router();
 
-router.route("/createPosts").post(postController.createPosts);
-
 router.route("/getPosts").get(postController.getPosts);
+router.route("/getPosts/:postId").get(postController.singlePost);
+router.route("/createPosts").post(postController.createPost);
 
-router.route("/getPosts/:id").get(postController.singlePost);
-router.route("/:id/comments").post(commentController.postComment);
+// router.route("/:postId/comments").post(commentController.postComment);
 
 module.exports = router;
