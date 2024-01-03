@@ -6,71 +6,100 @@ const {
   getpostsWithComments,
 } = require("../utils/helper");
 
-exports.createPost = catchAsync(async (req, res) => {
-  const newPost = new Post(req.body);
-  const savedPost = await newPost.save();
-  res.status(201).json(savedPost);
+exports.createPosts = catchAsync(async (req, res) => {
+  const newPost = await Post.create(req.body);
+  const createdAt = newPost.formatDate();
+  handleResponse({
+    res,
+    status: 200,
+    message: "post created successfully",
+    data: newPost,
+    createdAt,
+  });
 });
 
 exports.getPosts = catchAsync(async (req, res) => {
-  const posts = await Post.find();
-  res.json(posts);
+  const post = await Post.find({});
+
+  handleResponse({
+    res,
+    status: 200,
+    message: "comment posted successfully",
+    data: post,
+  });
 });
 
 exports.singlePost = catchAsync(async (req, res) => {
-  const post = await Post.findById(req.params.postId).populate({
-    path: "comments",
-    select: "content",
-  });
+  const { postId } = req.params;
+
+  const post = await Post.findById(postId).populate("comments");
+
   if (!post) {
-    res.status(404).json({ message: "post not found" });
-  } else {
-    res.json(post);
+    return handleResponse({
+      res,
+      status: 404,
+      message: "post not found",
+      data: null,
+    });
   }
+
+  handleResponse({ res, status: 200, message: "successful", data: post });
 });
 
-// exports.createPosts = catchAsync(async (req, res) => {
-//   const newPost = await Post.create(req.body);
-//   const createdAt = newPost.formatDate();
-//   handleResponse({
-//     res,
-//     status: 200,
-//     message: "post created successfully",
-//     data: newPost,
-//     createdAt,
-//   });
-// });
+exports.addComments = catchAsync(async (req, res) => {
+  const { commentBody } = req.body;
+  const { postId } = req.params;
 
-// populate comments if necessary
-// if (req.query.populateComments) {
-//   await Promise.all(
-//     posts.map(async (post) => {
-//       post.comments = await Comment.find({ _id: { $in: post.comments } });
+  const post = await Post.findById(postId);
+  if (!post) {
+    return handleResponse({
+      res,
+      status: 404,
+      message: "post not found",
+      data: null,
+    });
+  }
+  post.comments.push({ commentBody });
+  await post.save();
+
+  handleResponse({
+    res,
+    status: 200,
+    message: "comment added successfully",
+    data: post.comments,
+  });
+});
+
+// exports.createPost = catchAsync(async (req, res) => {
+//   // const newPost = new Post(req.body);
+//   // const savedPost = await newPost.save();
+//   // res.status(201).json(savedPost);
+
+//   const { content } = req.body;
+//   const newPost = new Post({ content });
+
+//   newPost.save().then((post) =>
+//     res.json({
+//       message: "post created successfully",
+//       post,
 //     })
 //   );
-// }
+// });
 
 // exports.getPosts = catchAsync(async (req, res) => {
-//   const posts = await getpostsWithComments();
-
-//   handleResponse({
-//     res,
-//     status: 200,
-//     message: "comment posted successfully",
-//     data: posts,
-//   });
+//   const posts = await Post.find({});
+//   res.json({ posts, message: "posts retrieved successfully" });
 // });
 
 // exports.singlePost = catchAsync(async (req, res) => {
-//   const { id } = req.params;
+//   const { postId } = req.params;
 
-//   const post = await Post.findById(id).populate("comments");
-//   if (!post) {
-//     return handleResponse({ res, status: 404, message: "page not found" });
-//   }
-
-//   const comments = post.comments;
-//   // handleResponse({ res, status: 200, message: "success", data: post });
-
-//   return res.json({ post, comments });
+//   Post.findById(postId).then((post) => {
+//     if (!post) {
+//       return res.status(404).json({
+//         message: "post not found",
+//       });
+//     }
+//     res.json({ post });
+//   });
 // });

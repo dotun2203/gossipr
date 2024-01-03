@@ -3,12 +3,21 @@ const Comment = require("../models/commentModel");
 const { catchAsync, handleResponse } = require("../utils/helper");
 
 exports.postComment = catchAsync(async (req, res) => {
-  const newComment = new Comment({
-    content: req.body.content,
-    postId: req.params.postId,
+  const { postId, createdAt, commentBody } = req.body;
+
+  Post.findById(postId).then((post) => {
+    if (!post) {
+      return res.status(404).json({ message: "post not found" });
+    }
+
+    post.comments.push({ content, createdAt, commentBody });
+    post.save().then((updatedPost) =>
+      res.json({
+        message: "comment added succesfully",
+        updatedPost,
+      })
+    );
   });
-  const savedComment = await newComment.save();
-  res.status(201).json(savedComment);
 });
 
 exports.getComments = catchAsync(async (req, res) => {

@@ -8,16 +8,19 @@ const postSchema = new mongoose.Schema({
     trim: true,
     minlength: [10, "a post must have more than 10 characters"],
   },
+  comments: [
+    {
+      commentBody: String,
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
-    },
-  ],
 });
 
 postSchema.methods.formatDate = function () {
