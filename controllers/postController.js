@@ -1,10 +1,5 @@
-// const { path } = require("../app");
 const Post = require("../models/postModel");
-const {
-  catchAsync,
-  handleResponse,
-  getpostsWithComments,
-} = require("../utils/helper");
+const { catchAsync, handleResponse } = require("../utils/helper");
 
 exports.createPosts = catchAsync(async (req, res) => {
   const newPost = await Post.create(req.body);
@@ -69,37 +64,3 @@ exports.addComments = catchAsync(async (req, res) => {
     data: post.comments,
   });
 });
-
-// exports.createPost = catchAsync(async (req, res) => {
-//   // const newPost = new Post(req.body);
-//   // const savedPost = await newPost.save();
-//   // res.status(201).json(savedPost);
-
-//   const { content } = req.body;
-//   const newPost = new Post({ content });
-
-//   newPost.save().then((post) =>
-//     res.json({
-//       message: "post created successfully",
-//       post,
-//     })
-//   );
-// });
-
-// exports.getPosts = catchAsync(async (req, res) => {
-//   const posts = await Post.find({});
-//   res.json({ posts, message: "posts retrieved successfully" });
-// });
-
-// exports.singlePost = catchAsync(async (req, res) => {
-//   const { postId } = req.params;
-
-//   Post.findById(postId).then((post) => {
-//     if (!post) {
-//       return res.status(404).json({
-//         message: "post not found",
-//       });
-//     }
-//     res.json({ post });
-//   });
-// });

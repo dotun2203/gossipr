@@ -4,7 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const postRoutes = require("./routes/postRoutes");
-const commentRoutes = require("./routes/commentRoutes");
+
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
@@ -46,7 +46,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/posts/", postRoutes);
-app.use("/api/v1/posts/", commentRoutes);
 // app.use("/api/v1/comments/", commentRoutes);
 
 // catch 404 and forward to error handler
