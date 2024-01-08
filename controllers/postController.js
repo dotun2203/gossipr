@@ -14,7 +14,7 @@ exports.createPosts = catchAsync(async (req, res) => {
 });
 
 exports.getPosts = catchAsync(async (req, res) => {
-  const post = await Post.find({});
+  const post = await Post.find({}).sort({createdAt:-1})
 
   handleResponse({
     res,
