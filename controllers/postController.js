@@ -19,7 +19,7 @@ exports.getPosts = catchAsync(async (req, res) => {
   handleResponse({
     res,
     status: 200,
-    message: "comment posted successfully",
+    message: "success",
     data: post,
   });
 });
@@ -38,7 +38,7 @@ exports.singlePost = catchAsync(async (req, res) => {
     });
   }
 
-  handleResponse({ res, status: 200, message: "successful", data: post });
+  handleResponse({ res, status: 200, message: "success", data: post });
 });
 
 exports.addComments = catchAsync(async (req, res) => {
@@ -60,7 +60,7 @@ exports.addComments = catchAsync(async (req, res) => {
   handleResponse({
     res,
     status: 200,
-    message: "comment added successfully",
+    message: "success",
     data: post.comments,
   });
 });
