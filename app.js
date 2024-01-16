@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const postRoutes = require("./routes/postRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
@@ -24,14 +25,9 @@ const MONGO_URI = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 );
 
-mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("DB connection successful");
-  });
+mongoose.connect(MONGO_URI).then(() => {
+  console.log("DB connection successful");
+});
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -46,6 +42,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/posts/", postRoutes);
+app.use("/api/v1/comments/", commentRoutes);
 // app.use("/api/v1/comments/", commentRoutes);
 
 // catch 404 and forward to error handler
