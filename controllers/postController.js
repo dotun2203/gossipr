@@ -46,6 +46,12 @@ exports.getPosts = catchAsync(async (req, res) => {
 exports.singlePost = catchAsync(async (req, res) => {
   const post = await Post.findById(req.params.postId).populate({
     path: "comments",
+    populate: {
+      path: "replies",
+      populate: {
+        path: "replies",
+      },
+    },
   });
 
   if (!post) {
