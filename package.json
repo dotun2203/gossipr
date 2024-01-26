@@ -2,7 +2,6 @@
   "name": "gossip-r",
   "version": "0.0.0",
   "private": true,
-  "main": "./www",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development node ./www",
     "start:production": "cross-env NODE_ENV=production node ./www"
